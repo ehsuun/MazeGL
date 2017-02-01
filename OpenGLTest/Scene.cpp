@@ -18,7 +18,7 @@ std::string deleteComments(const std::string& str)
 	{
 		// add new line skip the frist line
 		if (l > 0) {
-			output.append("\n");
+			
 		}		
 		l++;
 		string::size_type loc;
@@ -28,11 +28,15 @@ std::string deleteComments(const std::string& str)
 			if (loc != 0) {
 				string clean = line.substr(0, loc);
 				output.append(clean);
+				if(clean!="")
+				output.append("\n");
 			}
 		// we skip the line if # is at 0
 		}
 		else {
 			output.append(line);
+			if (line != "")
+			output.append("\n");
 		}
 
 	}
@@ -145,6 +149,74 @@ void Scene::LoadLevel(const string &levelstring)
 
 	
 
+}
+
+void Scene::GenerateMesh()
+{
+	vector<GLfloat> front;
+	vector<GLfloat> left;
+	vector<GLfloat> top;
+	vector<GLfloat> bottom;
+	float h = wallHeight;
+	float s = cellSize;
+	int quads = 0;
+	for (int j = 0; j < height*2; j++) {
+		for (int i = 0; i < width; i++) {
+			//front facing wall
+			if (j % 2 == 0) {
+				if (walls[i][j] != 0)
+					front = {
+					s*i*1.0f,		 0.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
+					s*(i + 1)*1.0f,  0.0f,		 s*(j / 2.0f)*1.0f,  1.0f, 0.0f, //bottom right
+					s*(i + 1)*1.0f,  h*1.0f,	 s*(j / 2.0f)*1.0f,  1.0f, 1.0f, //top right
+					s*(i + 1)*1.0f,  h*1.0f,	 s*(j / 2.0f)*1.0f,  1.0f, 1.0f, //top right
+					s*i*1.0f,		 h*1.0f,	 s*(j / 2.0f)*1.0f,  0.0f, 1.0f, //top left
+					s*i*1.0f,		 0.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
+				};
+				quads++;
+				vertices.insert(vertices.end(), front.begin(), front.end());
+			}
+			else {
+				if (walls[i][j] != 0)
+					left = {
+					s*i*1.0f,	 0.0f,		 s*((j-1) / 2.0f)*1.0f,  0.0f, 0.0f, //bottom front
+					s*(i)*1.0f,  0.0f,		 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 0.0f, //bottom back
+					s*(i)*1.0f,  h*1.0f,	 s*((j - 1) / 2.0f)*1.0f,  0.0f, 1.0f, //top front
+					s*(i)*1.0f,  h*1.0f,	 s*((j - 1) / 2.0f)*1.0f,  0.0f, 1.0f, //top front
+					s*i*1.0f,	 h*1.0f,	 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 1.0f, //top back
+					s*(i)*1.0f,  0.0f,		 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 0.0f, //bottom back
+				};
+				quads++;
+				vertices.insert(vertices.end(), left.begin(), left.end());
+			}
+			if (j % 2 == 0) {
+				top = {
+					s*i*1.0f,		 h*1.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
+					s*(i + 1)*1.0f,  h*1.0f,		 s*(j / 2.0f)*1.0f,  1.0f, 0.0f, //bottom right
+					s*(i + 1)*1.0f,  h*1.0f,	 s*((j / 2.0f) + 1)*1.0f,  1.0f, 1.0f, //top right
+					s*(i + 1)*1.0f,  h*1.0f,	 s*((j / 2.0f) + 1)*1.0f,  1.0f, 1.0f, //top right
+					s*i*1.0f,		 h*1.0f,	 s*((j / 2.0f) + 1)*1.0f,  0.0f, 1.0f, //top left
+					s*i*1.0f,		 h*1.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
+				};
+				quads++;
+				vertices.insert(vertices.end(), top.begin(), top.end());
+
+				//floor
+				bottom = {
+					s*i*1.0f,		 0 * 1.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
+					s*(i + 1)*1.0f,  0 * 1.0f,		 s*(j / 2.0f)*1.0f,  1.0f, 0.0f, //bottom right
+					s*(i + 1)*1.0f,  0 * 1.0f,	 s*((j / 2.0f) + 1)*1.0f,  1.0f, 1.0f, //top right
+					s*(i + 1)*1.0f,  0 * 1.0f,	 s*((j / 2.0f) + 1)*1.0f,  1.0f, 1.0f, //top right
+					s*i*1.0f,		 0 * 1.0f,	 s*((j / 2.0f) + 1)*1.0f,  0.0f, 1.0f, //top left
+					s*i*1.0f,		 0 * 1.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
+				};
+				quads++;
+				vertices.insert(vertices.end(), bottom.begin(), bottom.end());
+			}
+			// ceiling
+		}
+	}
+	cout << "number of quads " << quads;
 }
 
 Scene::Scene(int w, int h)

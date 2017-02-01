@@ -40,6 +40,9 @@
     <ClInclude Include="Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="floor.tif">
@@ -67,6 +70,33 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="wall7.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="floor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="monaLisa.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall7.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
