@@ -28,16 +28,3 @@ FLOORPLAN
 
 
 # end of the file
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  

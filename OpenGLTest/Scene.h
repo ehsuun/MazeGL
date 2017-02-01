@@ -14,11 +14,11 @@ using namespace std;
 
 struct Scene
 {
-	int** walls;
+	int walls[20][40];
 	int width;
 	int height;
-	int numberOfTextures;
-	vector<string> texturePaths;
+	int numberOfTextures =0;
+	string texturePaths[10];
 	int cellSize;
 	
 	int wallHeight =1;
