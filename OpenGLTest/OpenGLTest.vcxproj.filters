@@ -15,30 +15,67 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Resource Files</Filter>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vec.cpp">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.vert">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="shader.frag">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vec.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="floor.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="monaLisa.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall1.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall2.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall3.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall4.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall5.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall6.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="wall7.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="maze1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="maze2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

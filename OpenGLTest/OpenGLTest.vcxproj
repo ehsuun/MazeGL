@@ -146,6 +146,21 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Vec.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="floor.tif" />
+    <Image Include="monaLisa.tif" />
+    <Image Include="wall1.tif" />
+    <Image Include="wall2.tif" />
+    <Image Include="wall3.tif" />
+    <Image Include="wall4.tif" />
+    <Image Include="wall5.tif" />
+    <Image Include="wall6.tif" />
+    <Image Include="wall7.tif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="maze1.txt" />
+    <Text Include="maze2.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

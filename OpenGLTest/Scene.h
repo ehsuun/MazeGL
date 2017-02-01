@@ -2,6 +2,8 @@
 #include <glfw3.h>
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <vector>
 #include <iomanip>
 
 
@@ -15,8 +17,15 @@ struct Scene
 	int** walls;
 	int width;
 	int height;
+	int numberOfTextures;
+	vector<string> texturePaths;
+	int cellSize;
+	
+	int wallHeight =1;
 
-	void LoadLevel(string levelstring);
+
+
+	void LoadLevel(const string &levelstring);
 
 	Scene(int w, int h);
 	~Scene();

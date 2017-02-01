@@ -50,7 +50,7 @@ int main()
 	//
 
 	Scene s = Scene(5,5);
-	s.LoadLevel("salam");
+	s.LoadLevel(readFile("maze2.txt"));
 
 
 	// Init GLFW
