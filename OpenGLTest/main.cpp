@@ -8,6 +8,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "Scene.h"
+
 using namespace std;
 
 // Function prototypes
@@ -44,7 +46,13 @@ std::string readFile(const char *filePath) {
 // The MAIN function, from here we start the application and run the game loop
 int main()
 {
-	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
+	std::cout << "Starting GLFW context, OpenGL 3.3, MazeGL" << std::endl;
+	//
+
+	Scene s = Scene(5,5);
+	s.LoadLevel("salam");
+
+
 	// Init GLFW
 	glfwInit();
 	// Set all the required options for GLFW
@@ -181,7 +189,7 @@ int main()
 		//Rendering using the shader program
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
