@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+const float WALLTHICKNESS = 1.0f;
+
 std::string trim(const std::string& str)
 {
 	static const std::string ws = " \t\n";
@@ -145,10 +147,6 @@ void Scene::LoadLevel(const string &levelstring)
 
 	}
 
-
-
-	
-
 }
 
 void Scene::GenerateMesh()
@@ -159,35 +157,41 @@ void Scene::GenerateMesh()
 	vector<GLfloat> bottom;
 	float h = wallHeight;
 	float s = cellSize;
+
+	float t = WALLTHICKNESS;
 	int quads = 0;
 	for (int j = 0; j < height*2; j++) {
 		for (int i = 0; i < width; i++) {
 			//front facing wall
 			if (j % 2 == 0) {
-				if (walls[i][j] != 0)
+				if (walls[i][j] != 0){
 					front = {
-					s*i*1.0f,		 0.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
-					s*(i + 1)*1.0f,  0.0f,		 s*(j / 2.0f)*1.0f,  1.0f, 0.0f, //bottom right
-					s*(i + 1)*1.0f,  h*1.0f,	 s*(j / 2.0f)*1.0f,  1.0f, 1.0f, //top right
-					s*(i + 1)*1.0f,  h*1.0f,	 s*(j / 2.0f)*1.0f,  1.0f, 1.0f, //top right
-					s*i*1.0f,		 h*1.0f,	 s*(j / 2.0f)*1.0f,  0.0f, 1.0f, //top left
-					s*i*1.0f,		 0.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
+					s*i*1.0f,		 0.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 1.0f, //bottom left
+					s*(i + 1)*1.0f,  0.0f,		 s*(j / 2.0f)*1.0f,  1.0f, 1.0f, //bottom right
+					s*(i + 1)*1.0f,  h*1.0f,	 s*(j / 2.0f)*1.0f,  1.0f, 0.0f, //top right
+					s*(i + 1)*1.0f,  h*1.0f,	 s*(j / 2.0f)*1.0f,  1.0f, 0.0f, //top right
+					s*i*1.0f,		 h*1.0f,	 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //top left
+					s*i*1.0f,		 0.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 1.0f, //bottom left
 				};
 				quads++;
-				vertices.insert(vertices.end(), front.begin(), front.end());
+				vertices[walls[i][j] - 1].insert(vertices[walls[i][j] - 1].end(), front.begin(), front.end());
+				Cwalls.push_back(Wall(i*s, (j*s / 2) - (t/2.0f), s, t));
+				}
 			}
 			else {
-				if (walls[i][j] != 0)
+				if (walls[i][j] != 0){
 					left = {
-					s*i*1.0f,	 0.0f,		 s*((j-1) / 2.0f)*1.0f,  0.0f, 0.0f, //bottom front
-					s*(i)*1.0f,  0.0f,		 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 0.0f, //bottom back
-					s*(i)*1.0f,  h*1.0f,	 s*((j - 1) / 2.0f)*1.0f,  0.0f, 1.0f, //top front
-					s*(i)*1.0f,  h*1.0f,	 s*((j - 1) / 2.0f)*1.0f,  0.0f, 1.0f, //top front
-					s*i*1.0f,	 h*1.0f,	 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 1.0f, //top back
-					s*(i)*1.0f,  0.0f,		 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 0.0f, //bottom back
+					s*i*1.0f,	 0.0f,		 s*((j-1) / 2.0f)*1.0f,  0.0f, 1.0f, //bottom front
+					s*(i)*1.0f,  0.0f,		 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 1.0f, //bottom back
+					s*(i)*1.0f,  h*1.0f,	 s*((j - 1) / 2.0f)*1.0f,  0.0f, 0.0f, //top front
+					s*(i)*1.0f,  h*1.0f,	 s*((j - 1) / 2.0f)*1.0f,  0.0f, 0.0f, //top front
+					s*i*1.0f,	 h*1.0f,	 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 0.0f, //top back
+					s*(i)*1.0f,  0.0f,		 s*(((j - 1) / 2.0f) + 1.0f)*1.0f,  1.0f, 1.0f, //bottom back
 				};
 				quads++;
-				vertices.insert(vertices.end(), left.begin(), left.end());
+				vertices[walls[i][j]-1].insert(vertices[walls[i][j] - 1].end(), left.begin(), left.end());
+				Cwalls.push_back(Wall(i*s - (t / 2.0f), (j-1)*s / 2, t, s));
+				}
 			}
 			if (j % 2 == 0) {
 				top = {
@@ -199,7 +203,7 @@ void Scene::GenerateMesh()
 					s*i*1.0f,		 h*1.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
 				};
 				quads++;
-				vertices.insert(vertices.end(), top.begin(), top.end());
+				vertices[numberOfTextures-1].insert(vertices[numberOfTextures - 1].end(), top.begin(), top.end());
 
 				//floor
 				bottom = {
@@ -211,12 +215,43 @@ void Scene::GenerateMesh()
 					s*i*1.0f,		 0 * 1.0f,		 s*(j / 2.0f)*1.0f,  0.0f, 0.0f, //bottom left
 				};
 				quads++;
-				vertices.insert(vertices.end(), bottom.begin(), bottom.end());
+				vertices[numberOfTextures - 1].insert(vertices[numberOfTextures - 1].end(), bottom.begin(), bottom.end());
 			}
 			// ceiling
 		}
 	}
 	cout << "number of quads " << quads;
+}
+
+void Scene::GenerateTextures()
+{
+
+	unsigned char* image;
+	int txwidth, txheight;
+	glGenTextures(20, Textures);
+
+	for (int i = 0; i < numberOfTextures; i++) {
+
+		glGenTextures(1, &Textures[i]);
+		glBindTexture(GL_TEXTURE_2D, Textures[i]);
+		// Set our texture parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		// Set texture filtering
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// Load, create texture and generate mipmaps
+
+		string _path = texturePaths[i].substr(0, texturePaths[i].find('.', 0)) + ".png";
+		cout << _path.c_str();
+		image = SOIL_load_image(_path.c_str(), &txwidth, &txheight, 0, SOIL_LOAD_RGB);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, txwidth, txheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		SOIL_free_image_data(image);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 }
 
 Scene::Scene(int w, int h)
@@ -241,4 +276,35 @@ Scene::~Scene()
 		delete[] walls[i];
 	}
 	delete[] walls;
+}
+
+bool Wall::isPointInside(glm::vec3 p)
+{
+	if (p.x<x + length&&p.x>x) {
+		if (p.z<y + width&&p.z>y) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Wall::Wall(int _x, int _y, float _l, float _w)
+{
+	x = _x;
+	y = _y;
+	length = _l;
+	width = _w;
+}
+
+Wall::Wall()
+{
+	x = 0;
+	y = 0;
+	length = 0;
+	width = 0;
+}
+
+Wall::~Wall()
+{
+
 }
