@@ -134,15 +134,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="blit.frag" />
+    <None Include="blit.vert" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="globals.h" />
     <ClInclude Include="gltext.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />

@@ -24,12 +24,21 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.vert">
       <Filter>Source Files</Filter>
     </None>
     <None Include="shader.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="blit.vert">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="blit.frag">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
@@ -44,6 +53,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gltext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

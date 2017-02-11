@@ -16,6 +16,8 @@
 #include "Shader.h"
 #include <SOIL.h>
 #include "gltext.h"
+#include "FrameBuffer.h"
+#include "globals.h"
 
 
 using namespace std;
@@ -27,7 +29,7 @@ void checkForCollision();
 
 
 // Window dimensions
-const GLuint WIDTH = 1920, HEIGHT = 1080;
+
 
 const char *vertex_path = "shader.vert";
 const char *fragment_path = "shader.frag";
@@ -53,7 +55,10 @@ GLfloat timer = 30;
 
 bool firstMouse = true;
 
+bool ifSoftware = false;
+
 vector <Wall> *walls;
+
 
 std::string readFile(const char *filePath) {
 	std::string content;
@@ -99,7 +104,7 @@ int main()
 	
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "MyOpenGLTest", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "MyOpenGLTest", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -132,9 +137,11 @@ int main()
 
 	for (int i = 0; i < s.numberOfTextures; i++) {
 		shaders.push_back(Shader(vertex_path, fragment_path));
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, s.Textures[i]);
-		glUniform1i(glGetUniformLocation(shaders[i].Program, "ourTexture"), 0);
+		//shaders[i].Use();
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, s.Textures[i]);
+		glUniform1i(glGetUniformLocation(shaders[i].Program, "ourTexture"), 10);
+
 	}
 
 	s.GenerateTextures();
@@ -181,18 +188,15 @@ int main()
 	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 	glm::mat4 projection;
-	projection = glm::perspective((float)glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 500.0f);
+	projection = glm::perspective((float)glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 500.0f);
 
 
 	glEnable(GL_DEPTH_TEST);
 
 
-
-
-
-
-
-
+	FrameBuffer buffer = FrameBuffer(window_width, window_height);
+	
+	buffer.Fill(100, 100, 0);
 
 
 
@@ -264,19 +268,14 @@ int main()
 		GLfloat timeValue = glfwGetTime();
 		GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
 		GLint vertexColorLocation = glGetUniformLocation(myShader.Program, "ourColor");
-		// Bind Textures using texture units
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, s.Textures[1]);
-		glUniform1i(glGetUniformLocation(myShader.Program, "ourTexture"), 0);
 
 		for (int i = 0; i < s.numberOfTextures; i++) {
 
 			shaders[i].Use();
 
+			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, s.Textures[i]);
 			glUniform1i(glGetUniformLocation(shaders[i].Program, "ourTexture"), 0);
-
-			glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
 			//Sending Matrix Uniforms to shader
 			GLint modelLoc = glGetUniformLocation(shaders[i].Program, "model");
@@ -296,6 +295,12 @@ int main()
 			glBindVertexArray(0);
 		}
 
+		if (ifSoftware) {
+			buffer.dumpToScreen();
+		}
+		
+
+
 		// Swap the buffers
 		glfwSwapBuffers(window);
 	}
@@ -314,6 +319,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// closing the application
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		ifSoftware = !ifSoftware;
 
 	if (action == GLFW_PRESS)
 		keys[key] = true;
