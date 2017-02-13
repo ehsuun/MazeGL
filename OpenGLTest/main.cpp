@@ -18,6 +18,8 @@
 #include "gltext.h"
 #include "FrameBuffer.h"
 #include "globals.h"
+#include "Camera.h"
+#include "Vec.h"
 
 
 using namespace std;
@@ -39,6 +41,11 @@ glm::vec3 lastCameraPos = glm::vec3(0.0f, 5.0f, -2.0f);
 
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+
+Vec3 cameraPos_s = cameraPos, cameraFront_s, cameraUp_s, lastCameraPos;
+
+
 
 float wallHeight = 10.0f;
 
@@ -184,12 +191,26 @@ int main()
 	glm::mat4 model;
 	model = glm::rotate(model, (float)glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 view;
+
+	Matrix44 viewSoftware;
+
 	// Note that we're translating the scene in the reverse direction of where we want to move
 	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+	
+
+	viewSoftware = Transform::LookatMatrix(cameraPos_s, cameraPos_s + cameraFront_s, cameraUp_s);
 
 	glm::mat4 projection;
 	projection = glm::perspective((float)glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 500.0f);
 
+	Camera cam = Camera();
+
+	cam.gluPerspective();
+	cam.glFrustum();
+
+	Vec3 point = Vec3(0, 0, 0);
+	cam.Mproj.M;
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -210,6 +231,9 @@ int main()
 
 
 
+
+		cam.gluPerspective();
+		cam.glFrustum();
 
 
 		glfwPollEvents();
@@ -296,6 +320,26 @@ int main()
 		}
 
 		if (ifSoftware) {
+			buffer.Fill(0, 0, 0);
+			// do software rendering here
+
+
+
+
+			for (int j = 0; j < 20; j++) {
+				for (int i = 0; i < s.vertices[j].size()/5; i++) {
+					Vec3 point =
+						Vec3(s.vertices[j].at(i * 5),
+							s.vertices[j].at((i * 5)+1),
+							s.vertices[j].at((i * 5)+2));
+					Vec3 projected;
+					Transform::multPointMatrix(point, projected, cam.Mproj);
+					buffer.DrawPointClipSpace(projected.x, projected.y, Color(255, 255, 255, 255), 5);
+				}
+			}
+
+
+			buffer.DrawPoint(0.98, 0.98, Color(255, 255, 255, 255),50);
 			buffer.dumpToScreen();
 		}
 		

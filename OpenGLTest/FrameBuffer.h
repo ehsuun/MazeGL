@@ -7,8 +7,21 @@
 #include <glew.h>
 #include <glfw3.h>
 #include "Shader.h"
+#include <string>
+#include <iostream>
 
 /* implements the framebuffer. you might want to modify it to add depth buffering and other capabilities */
+
+struct Color {
+	GLubyte R;
+	GLubyte G;
+	GLubyte B;
+	GLubyte A;
+	Color(GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
+		R = r; G = g; B = b; A = a;
+	}
+};
+
 class FrameBuffer {
 	private:
 		int width, height;
@@ -106,6 +119,9 @@ class FrameBuffer {
 		void copyColorBuffer(CImage *image);
 		void dumpColorBufferToFile(char *name);
 		void dumpToScreen();
+		void DrawPoint(GLfloat x, GLfloat y, Color c);
+		void DrawPoint(GLfloat x, GLfloat y, Color c, GLint radius);
+		void DrawPointClipSpace(GLfloat x, GLfloat y, Color c, GLint radius);
 		void Fill(GLubyte R, GLubyte G, GLubyte B);
 };
 

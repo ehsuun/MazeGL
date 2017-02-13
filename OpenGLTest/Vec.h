@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <glm/glm.hpp>
+
 
 #ifndef VEC_H
 #define VEC_H
@@ -29,6 +31,8 @@ struct Vec3
 
 	Vec3& operator*(float rhs);
 	void operator=(Vec3 &rhs);
+
+	Vec3& operator=(glm::vec3 &rhs);
 	Vec3& operator*=(float rhs);
 	//Vec3& operator=(Vec3& rhs);
 	Vec3& operator+(Vec3 rhs);

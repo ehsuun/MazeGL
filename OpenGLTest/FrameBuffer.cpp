@@ -1,5 +1,11 @@
 #include <atlimage.h>
+#include <algorithm>
 #include "FrameBuffer.h"
+
+
+
+
+
 
 /* this function copies the color buffer to the given CImage */
 void FrameBuffer :: copyColorBuffer(CImage *image) {
@@ -70,6 +76,58 @@ void FrameBuffer :: dumpToScreen(void) {
 
 
 	return;
+}
+
+void FrameBuffer::DrawPoint(GLfloat x, GLfloat y,Color c) {
+	// move to screen space
+	int X = int(width*x);
+	int Y = int(height*y);
+	//color the point
+	color_buffer[4*(Y*width + X)] = c.R;
+	color_buffer[4*(Y*width + X)+1] = c.G;
+	color_buffer[4*(Y*width + X)+2] = c.B;
+	color_buffer[4*(Y*width + X)+3] = c.A;
+}
+
+
+void FrameBuffer::DrawPoint(GLfloat x, GLfloat y, Color c, GLint radius) {
+	// move to screen space
+	int X = int(width*x);
+	int Y = int(height*y);
+	//color the point
+
+	for (int i = X - radius; i < X + radius; i++) {
+		for (int j = Y - radius; j < Y + radius; j++) {
+
+			int I = i;
+			int J = j;
+
+			I = I<0 ? 0 : I;
+			I = I>(width-1) ? width-1 : I;
+
+			J = J<0 ? 0 : J;
+			J = J>(height-1) ? height-1 : J;
+
+
+			color_buffer[4 * (J*width + I)] = c.R;
+			color_buffer[4 * (J*width + I) + 1] = c.G;
+			color_buffer[4 * (J*width + I) + 2] = c.B;
+			color_buffer[4 * (J*width + I) + 3] = c.A;
+		}
+	}
+
+}
+
+void FrameBuffer::DrawPointClipSpace(GLfloat x, GLfloat y, Color c, GLint radius) {
+	
+	// throw out useless out of clip space stuff;
+	if (x<1 && x>-1 && y<1 && y>-1) {
+		float X = (x + 1) / 2;
+		float Y = (y + 1) / 2;
+
+		DrawPoint(X, Y, c, radius);
+	}
+
 }
 
 void FrameBuffer::Fill(GLubyte R, GLubyte G, GLubyte B)

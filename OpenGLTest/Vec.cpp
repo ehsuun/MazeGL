@@ -71,6 +71,13 @@ Vec3 & Vec3::operator+=(Vec3 rhs)
 	return *this;
 }
 
+Vec3& Vec3::operator=(glm::vec3 & rhs)
+{
+	x = rhs.x;
+	y = rhs.y;
+	z = rhs.z;
+}
+
 Vec3 & Vec3::operator*=(float rhs)
 {
 	x *= rhs;
