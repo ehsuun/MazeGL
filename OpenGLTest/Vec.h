@@ -28,13 +28,15 @@ struct Vec3
 
 	Vec3();
 	Vec3(GLfloat a, GLfloat b, GLfloat c);
+	Vec3(glm::vec3 vec);
 
 	Vec3& operator*(float rhs);
 	void operator=(Vec3 &rhs);
 
-	Vec3& operator=(glm::vec3 &rhs);
+	//Vec3& operator=(glm::vec3 &rhs);
+
 	Vec3& operator*=(float rhs);
-	//Vec3& operator=(Vec3& rhs);
+
 	Vec3& operator+(Vec3 rhs);
 	Vec3& operator+=(Vec3 rhs);
 	Vec3& operator-(Vec3& rhs);
@@ -45,8 +47,6 @@ struct Vec3
 	Vec3 cross(Vec3 & v);
 	float Magnitude();
 	Vec3 Normalized();
-
-
 	string ToString();
 
 

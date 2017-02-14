@@ -43,7 +43,10 @@ glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
-Vec3 cameraPos_s = cameraPos, cameraFront_s, cameraUp_s, lastCameraPos;
+Vec3 cameraPos_s;
+Vec3 cameraFront_s;
+Vec3 cameraUp_s;
+Vec3 lastCameraPos_s;
 
 
 
@@ -91,6 +94,12 @@ void MoveAround();
 // The MAIN function, from here we start the application and run the game loop
 int main()
 {
+
+	 cameraPos_s = Vec3(cameraPos);
+	 cameraFront_s = Vec3(cameraFront);
+	 cameraUp_s = Vec3(0,1,0);
+	 lastCameraPos_s = Vec3(lastCameraPos);
+
 	std::cout << "Starting GLFW context, OpenGL 3.3, MazeGL" << std::endl;
 	//
 
@@ -191,26 +200,49 @@ int main()
 	glm::mat4 model;
 	model = glm::rotate(model, (float)glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 view;
-
+	
+	Matrix44 modelSoftware;
 	Matrix44 viewSoftware;
 
 	// Note that we're translating the scene in the reverse direction of where we want to move
 	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 	
+	Vec3 add = (cameraPos_s + cameraFront_s);
+	viewSoftware = Transform::LookatMatrixFW(cameraPos_s, add, cameraUp_s);
+	//viewSoftware = Transform::lookAt(cameraPos_s, add, cameraUp_s);
+	//viewSoftware = view;
 
-	viewSoftware = Transform::LookatMatrix(cameraPos_s, cameraPos_s + cameraFront_s, cameraUp_s);
+	for (int k = 0; k < 4; k++) {
+		cout << endl;
+		for (int l = 0; l < 4; l++) {
+			cout << view[l][k] << "	";
+		}
+	}
+
+	cout << "_______________________" << endl;
+
+	for (int k = 0; k < 4; k++) {
+		cout << endl;
+		for (int l = 0; l < 4; l++) {
+			cout << viewSoftware.M[l][k] << "	";
+		}
+	}
+
+
 
 	glm::mat4 projection;
 	projection = glm::perspective((float)glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 500.0f);
 
-	Camera cam = Camera();
+	Camera cam = Camera(45,1,0.1f,500.0f);
 
 	cam.gluPerspective();
 	cam.glFrustum();
 
 	Vec3 point = Vec3(0, 0, 0);
-	cam.Mproj.M;
+
+
+
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -240,6 +272,10 @@ int main()
 		MoveAround();
 		//model = glm::rotate(model, 0.01f, glm::vec3(0.5f, 1.0f, 0.0f));
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+		
+		Vec3 add = (cameraPos_s + cameraFront_s);
+		viewSoftware = Transform::LookatMatrixFW(cameraPos_s, cameraFront_s, cameraUp_s);
+		//viewSoftware = view;
 		// Check and call events
 		
 
@@ -333,7 +369,8 @@ int main()
 							s.vertices[j].at((i * 5)+1),
 							s.vertices[j].at((i * 5)+2));
 					Vec3 projected;
-					Transform::multPointMatrix(point, projected, cam.Mproj);
+					Transform::multPointMatrix(point, projected, viewSoftware);
+					Transform::multPointMatrix(projected, projected, cam.Mproj);
 					buffer.DrawPointClipSpace(projected.x, projected.y, Color(255, 255, 255, 255), 5);
 				}
 			}
@@ -405,7 +442,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	front.y = sin(glm::radians(pitch));
 	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
 	cameraFront = glm::normalize(front);
-
+	cameraFront_s = Vec3(cameraFront);
 
 }
 
@@ -422,6 +459,7 @@ void MoveAround()
 	if (keys[GLFW_KEY_D])
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
+	cameraPos_s = Vec3(cameraPos);
 	checkForCollision();
 
 	lastCameraPos = cameraPos;
@@ -430,10 +468,12 @@ void MoveAround()
 void checkForCollision() {
 	if (cameraPos.y < 0.2) {
 		cameraPos = glm::vec3(cameraPos.x, 0.2, cameraPos.z);
+		cameraPos_s = Vec3(cameraPos);
 	}
 
 	if (cameraPos.y > wallHeight -0.2f) {
 		cameraPos = glm::vec3(cameraPos.x, wallHeight - 0.2f, cameraPos.z);
+		cameraPos_s = Vec3(cameraPos);
 	}
 
 

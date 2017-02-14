@@ -334,14 +334,43 @@
 
  Matrix44::Matrix44()
  {
+	 for (int i = 0; i < 4; i++)
+	 {
+		 for (int j = 0; j < 4; j++)
+		 {
+			 M[i][j] = 0;
+		 }
+	 }
+ }
+
+ Matrix44::Matrix44(float fill)
+ {
+	 for (int i = 0; i < 4; i++)
+	 {
+		 for (int j = 0; j < 4; j++)
+		 {
+			 M[i][j] = fill;
+		 }
+	 }
+ }
+
+ void Matrix44::operator=(glm::mat4x4 & rhs)
+ {
+	 for (int i = 0; i < 4; i++)
+	 {
+		 for (int j = 0; j < 4; j++)
+		 {
+			 M[i][j] = rhs[i][j];
+		 }
+	 }
  }
 
 
  void Matrix44::operator=(Matrix44 &rhs)
  {
-	 for (int i = 0; i < 3; i++)
+	 for (int i = 0; i < 4; i++)
 	 {
-		 for (int j = 0; j < 3; j++)
+		 for (int j = 0; j < 4; j++)
 		 {
 			 M[i][j] = rhs.M[i][j];
 		 }
@@ -390,4 +419,69 @@
 		 Matrix44 lookat = Matrix44();
 		 Transform::Multiply(orientation, translation, lookat.M);
 		 return lookat;
+ }
+
+ Matrix44 Transform::LookatMatrixFW(Vec3 eye, Vec3 forward, Vec3 up) {
+
+	 Vec3 zaxis = forward;	    // The "forward" vector.
+	 zaxis = zaxis.Normalized();
+	 Vec3 xaxis = up.cross(zaxis);// The "right" vector.
+	 xaxis = xaxis.Normalized();
+	 Vec3 yaxis = zaxis.cross(xaxis);			// The "up" vector.
+
+												// Create a 4x4 orientation matrix from the right, up, and forward vectors
+												// This is transposed which is equivalent to performing an inverse 
+												// if the matrix is orthonormalized (in this case, it is).
+	 float orientation[4][4] = {
+		 { xaxis.x, yaxis.x, zaxis.x, 0 },
+		 { xaxis.y, yaxis.y, zaxis.y, 0 },
+		 { xaxis.z, yaxis.z, zaxis.z, 0 },
+		 { 0,       0,       0,     1 }
+	 };
+
+
+	 // Create a 4x4 translation matrix.
+	 // The eye position is negated which is equivalent
+	 // to the inverse of the translation matrix. 
+	 // T(v)^-1 == T(-v)
+	 float translation[4][4] = {
+		 { 1,      0,      0,   0 },
+		 { 0,      1,      0,   0 },
+		 { 0,      0,      1,   0 },
+		 { -eye.x, -eye.y, -eye.z, 1 }
+	 };
+	 // Combine the orientation and translation to compute 
+	 // the final view matrix
+
+	 Matrix44 lookat = Matrix44();
+	 Transform::Multiply(orientation, translation, lookat.M);
+	 return lookat;
+ }
+
+
+ Matrix44 Transform::lookAt(Vec3& from,Vec3& to, Vec3& tmp = Vec3(0, 1, 0))
+ {
+	 Vec3 forward = (from - to);
+	 forward = forward.Normalized();
+	 tmp = tmp.Normalized();
+	 Vec3 right = tmp.cross(forward);
+	 Vec3 up = forward.cross(right);
+
+	 Matrix44 camToWorld = Matrix44(1);
+
+	 camToWorld.M[0][0] = right.x;
+	 camToWorld.M[0][1] = right.y;
+	 camToWorld.M[0][2] = right.z;
+	 camToWorld.M[1][0] = up.x;
+	 camToWorld.M[1][1] = up.y;
+	 camToWorld.M[1][2] = up.z;
+	 camToWorld.M[2][0] = forward.x;
+	 camToWorld.M[2][1] = forward.y;
+	 camToWorld.M[2][2] = forward.z;
+
+	 camToWorld.M[3][0] = from.x;
+	 camToWorld.M[3][1] = from.y;
+	 camToWorld.M[3][2] = from.z;
+
+	 return camToWorld;
  }

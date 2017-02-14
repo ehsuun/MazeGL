@@ -26,6 +26,13 @@ Vec3::Vec3(GLfloat a, GLfloat b, GLfloat c)
 	z = c;
 }
 
+Vec3::Vec3(glm::vec3 vec)
+{
+	x = vec.x;
+	y = vec.y;
+	z = vec.z;
+}
+
 Vec3& Vec3::operator* (float rhs)
 {
 	Vec3 mult = Vec3();
@@ -41,7 +48,6 @@ void Vec3::operator=(Vec3 &rhs)
 	y = rhs.y;
 	z = rhs.z;
 }
-
 
 
 
@@ -71,12 +77,7 @@ Vec3 & Vec3::operator+=(Vec3 rhs)
 	return *this;
 }
 
-Vec3& Vec3::operator=(glm::vec3 & rhs)
-{
-	x = rhs.x;
-	y = rhs.y;
-	z = rhs.z;
-}
+
 
 Vec3 & Vec3::operator*=(float rhs)
 {
