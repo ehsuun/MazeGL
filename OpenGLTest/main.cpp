@@ -209,8 +209,8 @@ int main()
 
 	
 	Vec3 add = (cameraPos_s + cameraFront_s);
-	viewSoftware = Transform::LookatMatrixFW(cameraPos_s, add, cameraUp_s);
-	//viewSoftware = Transform::lookAt(cameraPos_s, add, cameraUp_s);
+	//viewSoftware = Transform::LookatMatrixFW(cameraPos_s, add, cameraUp_s);
+	viewSoftware = Transform::lookAt(cameraPos_s, add, cameraUp_s);
 	//viewSoftware = view;
 
 	for (int k = 0; k < 4; k++) {
@@ -274,9 +274,8 @@ int main()
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		
 		Vec3 add = (cameraPos_s + cameraFront_s);
-		viewSoftware = Transform::LookatMatrixFW(cameraPos_s, cameraFront_s, cameraUp_s);
-		//viewSoftware = view;
-		// Check and call events
+		viewSoftware = Transform::lookAt(cameraPos_s, add, cameraUp_s);
+
 		
 
 		// Rendering commands here

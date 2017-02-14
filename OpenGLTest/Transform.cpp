@@ -459,29 +459,26 @@
  }
 
 
- Matrix44 Transform::lookAt(Vec3& from,Vec3& to, Vec3& tmp = Vec3(0, 1, 0))
+ Matrix44 Transform::lookAt(Vec3& eye,Vec3& center, Vec3& up)
  {
-	 Vec3 forward = (from - to);
-	 forward = forward.Normalized();
-	 tmp = tmp.Normalized();
-	 Vec3 right = tmp.cross(forward);
-	 Vec3 up = forward.cross(right);
+	 Vec3 f = center - eye;
+	 f = f.Normalized();
+	 Vec3 s = f.cross(up);
+	 s = s.Normalized();
+	 Vec3 u = s.cross(f);
 
-	 Matrix44 camToWorld = Matrix44(1);
-
-	 camToWorld.M[0][0] = right.x;
-	 camToWorld.M[0][1] = right.y;
-	 camToWorld.M[0][2] = right.z;
-	 camToWorld.M[1][0] = up.x;
-	 camToWorld.M[1][1] = up.y;
-	 camToWorld.M[1][2] = up.z;
-	 camToWorld.M[2][0] = forward.x;
-	 camToWorld.M[2][1] = forward.y;
-	 camToWorld.M[2][2] = forward.z;
-
-	 camToWorld.M[3][0] = from.x;
-	 camToWorld.M[3][1] = from.y;
-	 camToWorld.M[3][2] = from.z;
-
-	 return camToWorld;
+	 Matrix44 Result(1);
+	 Result.M[0][0] = s.x;
+	 Result.M[1][0] = s.y;
+	 Result.M[2][0] = s.z;
+	 Result.M[0][1] = u.x;
+	 Result.M[1][1] = u.y;
+	 Result.M[2][1] = u.z;
+	 Result.M[0][2] = -f.x;
+	 Result.M[1][2] = -f.y;
+	 Result.M[2][2] = -f.z;
+	 Result.M[3][0] = -s.dot(eye);
+	 Result.M[3][1] = -u.dot(eye);
+	 Result.M[3][2] = f.dot(eye);
+	 return Result;
  }

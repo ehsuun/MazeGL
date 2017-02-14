@@ -63,9 +63,9 @@ Vec3& Vec3::operator+(Vec3 rhs)
 Vec3& Vec3::operator-(Vec3& rhs)
 {
 	Vec3 sum = Vec3();
-	sum.x = x + rhs.x;
-	sum.y = y + rhs.y;
-	sum.z = z + rhs.z;
+	sum.x = x - rhs.x;
+	sum.y = y - rhs.y;
+	sum.z = z - rhs.z;
 	return sum;
 }
 

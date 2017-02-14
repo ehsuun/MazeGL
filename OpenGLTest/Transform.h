@@ -38,5 +38,5 @@ public:
 	 static Vec3 Scale(Vec3 origin, Vec3 scale);
 	 static Matrix44 LookatMatrix(Vec3 eye, Vec3 target, Vec3 up);
 	 static Matrix44 LookatMatrixFW(Vec3 eye, Vec3 forward, Vec3 up);
-	 static Matrix44 lookAt(Vec3 & from, Vec3 & to, Vec3 & tmp);
+	 static Matrix44 lookAt(Vec3 & eye, Vec3 & center, Vec3 & up);
 };
