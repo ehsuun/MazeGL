@@ -16,7 +16,7 @@
 #include "Shader.h"
 #include <SOIL.h>
 #include "gltext.h"
-#include "FrameBuffer.h"
+#include "Renderer.h"
 #include "globals.h"
 #include "Camera.h"
 #include "Vec.h"
@@ -231,6 +231,9 @@ int main()
 
 
 
+
+
+
 	glm::mat4 projection;
 	projection = glm::perspective((float)glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 500.0f);
 
@@ -242,12 +245,53 @@ int main()
 	Vec3 point = Vec3(0, 0, 0);
 
 
+	cout << "_______________________" << endl;
+
+	for (int k = 0; k < 4; k++) {
+		cout << endl;
+		for (int l = 0; l < 4; l++) {
+			cout << projection[l][k] << "	";
+		}
+	}
+
+	cout << "_______________________" << endl;
+
+	for (int k = 0; k < 4; k++) {
+		cout << endl;
+		for (int l = 0; l < 4; l++) {
+			cout << cam.Mproj.M[l][k] << "	";
+		}
+	}
+
+	glm::mat4 concat = (view*model*projection);
+
+	Matrix44 softwarematrix;
+	softwarematrix = concat;
+
+	cout << "Concatination" << endl;
+
+	for (int k = 0; k < 4; k++) {
+		cout << endl;
+		for (int l = 0; l < 4; l++) {
+			cout << concat[l][k] << "	";
+		}
+	}
+
+	cout << "_______________________" << endl;
+
+	for (int k = 0; k < 4; k++) {
+		cout << endl;
+		for (int l = 0; l < 4; l++) {
+			cout << softwarematrix.M[l][k] << "	";
+		}
+	}
 
 
 	glEnable(GL_DEPTH_TEST);
 
 
 	FrameBuffer buffer = FrameBuffer(window_width, window_height);
+	Renderer renderer = Renderer(buffer);
 	
 	buffer.Fill(100, 100, 0);
 
@@ -348,34 +392,62 @@ int main()
 
 
 			glBindVertexArray(VAOs[i]);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDrawArrays(GL_TRIANGLES, 0, s.vertices[i].size() / 5);
 			//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 		}
 
 		if (ifSoftware) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			buffer.Fill(0, 0, 0);
 			// do software rendering here
 
 
 
-
+			int counter = 0;
 			for (int j = 0; j < 20; j++) {
-				for (int i = 0; i < s.vertices[j].size()/5; i++) {
-					Vec3 point =
-						Vec3(s.vertices[j].at(i * 5),
-							s.vertices[j].at((i * 5)+1),
-							s.vertices[j].at((i * 5)+2));
-					Vec3 projected;
-					Transform::multPointMatrix(point, projected, viewSoftware);
-					Transform::multPointMatrix(projected, projected, cam.Mproj);
-					buffer.DrawPointClipSpace(projected.x, projected.y, Color(255, 255, 255, 255), 5);
+				for (int i = 0; i < (s.vertices[j].size()/15); i++) {
+					Vec3 point1 =
+						Vec3(s.vertices[j].at(i * 15),
+							s.vertices[j].at((i * 15)+1),
+							s.vertices[j].at((i * 15)+2));
+					Vec3 point2 =
+						Vec3(s.vertices[j].at(i * 15) + 5,
+							s.vertices[j].at((i * 15) + 6),
+							s.vertices[j].at((i * 15) + 7));
+					Vec3 point3 =
+						Vec3(s.vertices[j].at(i * 15) + 10,
+							s.vertices[j].at((i * 15) + 11),
+							s.vertices[j].at((i * 15) + 12));
+					Vec3 p0;
+					Vec3 p1;
+					Vec3 p2;
+
+
+					//Transform::multPointMatrix(point, projected, viewSoftware);
+					//Transform::multPointMatrix(projected, projected, cam.Mproj);
+					Matrix44 softwarematrix;
+					softwarematrix = (projection*view);
+
+					Transform::multPointMatrix(point1, p0, softwarematrix);
+					Transform::multPointMatrix(point2, p1, softwarematrix);
+					Transform::multPointMatrix(point3, p2, softwarematrix);
+
+					
+					
+					Color rand = Color::Random(int(i*100));
+					//renderer.RenderTriangle(p0, p1, p2, rand);
+					buffer.DrawPointClipSpace(p0, rand, 5);
+					buffer.DrawPointClipSpace(p1, rand, 5);
+					buffer.DrawPointClipSpace(p2, rand, 5);
+
 				}
+
 			}
 
 
-			buffer.DrawPoint(0.98, 0.98, Color(255, 255, 255, 255),50);
+			buffer.DrawPoint(0.98, 0.98, Color(255, 255, 255, 255),5);
 			buffer.dumpToScreen();
 		}
 		

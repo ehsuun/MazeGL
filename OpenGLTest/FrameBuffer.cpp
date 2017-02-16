@@ -89,6 +89,16 @@ void FrameBuffer::DrawPoint(GLfloat x, GLfloat y,Color c) {
 	color_buffer[4*(Y*width + X)+3] = c.A;
 }
 
+void FrameBuffer::DrawPixel(GLint x, GLint y, Color c) {
+	// move to screen space
+
+	//color the point
+	color_buffer[4 * (y*width + x)] = c.R;
+	color_buffer[4 * (y*width + x) + 1] = c.G;
+	color_buffer[4 * (y*width + x) + 2] = c.B;
+	color_buffer[4 * (y*width + x) + 3] = c.A;
+}
+
 
 void FrameBuffer::DrawPoint(GLfloat x, GLfloat y, Color c, GLint radius) {
 	// move to screen space
@@ -120,6 +130,8 @@ void FrameBuffer::DrawPoint(GLfloat x, GLfloat y, Color c, GLint radius) {
 
 void FrameBuffer::DrawPointClipSpace(GLfloat x, GLfloat y, Color c, GLint radius) {
 	
+	x = -x;
+	y = -y;
 	// throw out useless out of clip space stuff;
 	if (x<1 && x>-1 && y<1 && y>-1) {
 		float X = (x + 1) / 2;
@@ -129,6 +141,19 @@ void FrameBuffer::DrawPointClipSpace(GLfloat x, GLfloat y, Color c, GLint radius
 	}
 
 }
+
+void FrameBuffer::DrawPointClipSpace(Vec3 point, Color c, GLint radius)
+{
+	
+	// throw out useless out of clip space stuff;
+	if (point.x<1.0 && point.x>-1 && point.y<1 && point.y>-1&&point.z>0&&point.z<1) {
+		float X = (point.x + 1) / 2;
+		float Y = (point.y + 1) / 2;
+
+		DrawPoint(X, Y, c, radius);
+	}
+}
+
 
 void FrameBuffer::Fill(GLubyte R, GLubyte G, GLubyte B)
 {

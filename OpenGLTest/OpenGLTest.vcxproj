@@ -137,6 +137,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vec.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="gltext.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Transform.h" />

@@ -119,6 +119,8 @@
 	 out.z = in.x * M.M[0][2] + in.y * M.M[1][2] + in.z * M.M[2][2] + /* in.z = 1 */ M.M[3][2];
 	 float w = in.x * M.M[0][3] + in.y * M.M[1][3] + in.z * M.M[2][3] + /* in.z = 1 */ M.M[3][3];
 
+
+
 	 // normalize if w is different than 1 (convert from homogeneous to Cartesian coordinates)
 	 if (w != 1) {
 		 out.x /= w;
@@ -126,6 +128,35 @@
 		 out.z /= w;
 	 }
  }
+
+ void Transform::multPointMatrix2(const Vec3 & in, Vec3 & out, const Matrix44 & M)
+ {
+	 float Point[4][1] = { {in.x},{in.y},{in.z},{1} };
+	 float Mat[4][4];
+
+	 for (int k = 0; k < 4; k++) {
+		 for (int l = 0; l < 4; l++) {
+			 Mat[l][k] = M.M[l][k];
+		 }
+	 }
+
+	 float Output[4][1] = { { 1 },{ 1 },{ 1 },{ 1 } };
+	 Transform::Multiply(Mat, Point, Output);
+
+	 out.x = Output[0][0];
+	 out.y = Output[0][1];
+	 out.z = Output[0][2];
+
+	 float w = Output[0][3];
+
+	 // normalize if w is different than 1 (convert from homogeneous to Cartesian coordinates)
+	 if (w != 1) {
+		 out.x /= w;
+		 out.y /= w;
+		 out.z /= w;
+	 }
+ }
+
 
  Vec3 Transform::Project(Vec3 origin, float fov, float aspect, float nearZ, float farZ,Vec3 camPosition,Vec3 targetPosition)
  {

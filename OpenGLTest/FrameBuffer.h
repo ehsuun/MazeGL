@@ -9,10 +9,13 @@
 #include "Shader.h"
 #include <string>
 #include <iostream>
+#include "Vec.h"
 
 /* implements the framebuffer. you might want to modify it to add depth buffering and other capabilities */
 
 struct Color {
+
+public:
 	GLubyte R;
 	GLubyte G;
 	GLubyte B;
@@ -20,16 +23,48 @@ struct Color {
 	Color(GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
 		R = r; G = g; B = b; A = a;
 	}
+	Color() {
+		R = 0;
+		G = 0;
+		B = 0;
+		A = 0;
+	}
+
+	void operator=(Color &rhs) {
+		R = rhs.R;
+		G = rhs.G;
+		B = rhs.B;
+		A = rhs.A;
+	}
+
+	static Color Random() {
+		Color col;
+		col.R = int(static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 255.0f)));
+		col.G = int(static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 255.0f)));
+		col.B = int(static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 255.0f)));
+		col.A = 255;
+		return col;
+	}
+
+	static Color Random(int seed) {
+		Color col;
+		srand(seed);
+		col.R = int(rand() % 256);
+		col.G = int(rand() % 256);
+		col.B = int(rand() % 256);
+		col.A = 255;
+		return col;
+	}
+
 };
 
 class FrameBuffer {
 	private:
-		int width, height;
+
 		const char *vertex_path = "blit.vert";
 		const char *fragment_path = "blit.frag";
 
-		/* all the buffers are defined from the lower left corner of the screen */
-		GLubyte *color_buffer;		/* color buffer is unsigned bytes buffer size 3*w*h */
+
 
 
 
@@ -49,9 +84,12 @@ class FrameBuffer {
 		
 
 	public:
+		/* all the buffers are defined from the lower left corner of the screen */
+		GLubyte *color_buffer;		/* color buffer is unsigned bytes buffer size 3*w*h */
 		/* constructor */
 		GLuint VBO, VAO, EBO;
 		GLuint screenTexture;
+		int width, height;
 		Shader shader = Shader(vertex_path, fragment_path);
 			FrameBuffer(int _w, int _h) {
 			width = _w;		height = _h;
@@ -120,8 +158,11 @@ class FrameBuffer {
 		void dumpColorBufferToFile(char *name);
 		void dumpToScreen();
 		void DrawPoint(GLfloat x, GLfloat y, Color c);
+		void DrawPixel(GLint x, GLint y, Color c);
 		void DrawPoint(GLfloat x, GLfloat y, Color c, GLint radius);
 		void DrawPointClipSpace(GLfloat x, GLfloat y, Color c, GLint radius);
+		void DrawPointClipSpace(Vec3 point, Color c, GLint radius);
+		void DrawTriangle(Vec3 v1, Vec3 v2, Vec3 v3, Color col);
 		void Fill(GLubyte R, GLubyte G, GLubyte B);
 };
 

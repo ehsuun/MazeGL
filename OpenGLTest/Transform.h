@@ -23,10 +23,12 @@ public:
 	 static void Multiply(float A[3][3], float B[3][3], float output[3][3]);
 	 static void Multiply(float A[3][3], float B[3][1], float output[3][1]);
 	 static void Multiply(float A[4][4], float B[4][4], float output[4][4]);
-	 static void Multiply(float A[4][4], float B[4][1], float output[4][1]);
+	 static void Multiply( float A[4][4],  float B[4][1],  float output[4][1]);
 	 static void MultiplyByProjection(float B[4][1], float output[4][1], float fov, float aspect, float nearZ, float farZ);
 
 	 static void multPointMatrix(const Vec3 &in, Vec3 &out, const Matrix44 &M);
+
+	 static void multPointMatrix2(const Vec3 & in, Vec3 & out, const Matrix44 & M);
 
 	 static Vec3 Project(Vec3 origin, float fov, float aspect, float nearZ, float farZ, Vec3 camPosition, Vec3 targetPosition);
 	 static Vec3 Translate(Vec3 origin, Vec3 translation);
