@@ -80,14 +80,6 @@ GLfloat testVerts[32] = {
 	1.0f,  1.0f, 0.0f,     1.0f, 1.0f // Top Right
 };
 
-vector<Vertex> testPoly = {
-	Vertex(Vec3(0,0,0),Vec2(0.0,0.5)),
-	Vertex(Vec3(1,0,0),Vec2(0.5,0.5)),
-	Vertex(Vec3(1,1,0),Vec2(0.5,0.5)),
-	Vertex(Vec3(0,1,0),Vec2(0,0)),
-	Vertex(Vec3(-0.5,0.5,0),Vec2(0,0))
-};
-
 
 std::string readFile(const char *filePath) {
 	std::string content;
@@ -189,7 +181,6 @@ int main()
 	}
 
 	s.GenerateTextures();
-
 
 	walls = &s.Cwalls;
 
@@ -355,10 +346,6 @@ int main()
 	FrameBuffer buffer = FrameBuffer(window_width, window_height);
 	Renderer renderer = Renderer(buffer);
 	
-	for (int k = 0; k < 20; k++) {
-		renderer.textures.push_back(s.texture2Ds[k]);
-	}
-
 	buffer.Fill(100, 100, 0);
 
 
@@ -439,7 +426,7 @@ int main()
 		GLint vertexColorLocation = glGetUniformLocation(myShader.Program, "ourColor");
 
 
-		
+		/*
 		for (int i = 0; i < s.numberOfTextures; i++) {
 
 			shaders[i].Use();
@@ -460,14 +447,13 @@ int main()
 
 
 			glBindVertexArray(VAOs[i]);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDrawArrays(GL_TRIANGLES, 0, s.vertices[i].size() / 5);
 			//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 		}
-	
+	*/
 
-		/*
 		shaders[0].Use();
 
 		glActiveTexture(GL_TEXTURE0);
@@ -491,14 +477,15 @@ int main()
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
-		*/
+
 		if (ifSoftware) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			buffer.Fill(0, 0, 0);
-			buffer.ClearDepth();
 			// do software rendering here
-			int counter = 0;
 
+
+
+			int counter = 0;
 			/*
 			for (int j = 0; j < 20; j++) {
 				for (int i = 0; i < (s.vertices[j].size()/15); i++) {
@@ -542,18 +529,69 @@ int main()
 			*/
 			//////////////////////////////////////////////////////////////////
 
+			for (int i = 0; i < (30 / 15); i++) {
+				Vertex point1(
+					Vec3(testVerts[i * 15],
+						testVerts[(i * 15) + 1],
+						testVerts[(i * 15) + 2])
+					,
+					Vec2((testVerts[(i * 15)+3]), (testVerts[(i * 15) + 4]))
+					);
 
-			renderer.MVP = (projection*view*model);
-			vector<Vertex> drawVec = testPoly;
-			renderer.RenderPolygon(drawVec, s.texture2Ds[0]);
+				Vertex point2(
+					Vec3(testVerts[i * 15 + 5],
+						testVerts[i * 15 + 6],
+						testVerts[i * 15 + 7]),
+					Vec2((testVerts[(i * 15) + 8]), (testVerts[(i * 15) + 9]))
+					);
 
-			for (int i = 0; i < s.numberOfTextures; i++) {
-				renderer.activeTexture = i;
-				renderer.RenderMesh(s.vertices[i]);
+				Vertex point3(
+					Vec3(testVerts[i * 15 + 10],
+						testVerts[i * 15 + 11],
+						testVerts[i * 15 + 12]),
+					Vec2((testVerts[(i * 15) + 13]), (testVerts[(i * 15) + 14]))
+					);
+
+				Vec3 p0;
+				Vec3 p1;
+				Vec3 p2;
+
+
+				//Transform::multPointMatrix(point, projected, viewSoftware);
+				//Transform::multPointMatrix(projected, projected, cam.Mproj);
+				Matrix44 softwarematrix;
+				softwarematrix = (projection*view*model);
+
+				//Transform::multPointMatrix(point1.position, point1.position, softwarematrix);
+				//Transform::multPointMatrix(point2.position, point2.position, softwarematrix);
+				//Transform::multPointMatrix(point3.position, point3.position, softwarematrix);
+
+
+				Transform::multPointMatrix(point1.position, p0, softwarematrix);
+				Transform::multPointMatrix(point2.position, p1, softwarematrix);
+				Transform::multPointMatrix(point3.position, p2, softwarematrix);
+
+				point1.position = p0;
+				point2.position = p1;
+				point3.position = p2;
+
+
+
+				Color rand = Color::Random(int(i * 100));
+				//renderer.RenderTriangle(p0, p1, p2, rand);
+				renderer.RenderTriangle(point1.position, point2.position, point3.position, rand);
+
+				renderer.RenderTriangle(point1, point2, point3,s.texture2Ds[0]);
+
+
+				buffer.DrawPointClipSpace(p0, rand, 5);
+				buffer.DrawPointClipSpace(p1, rand, 5);
+				buffer.DrawPointClipSpace(p2, rand, 5);
+
 			}
-			
-			
 
+
+			//////////////////////////////////////////////////////////////////
 			buffer.dumpToScreen();
 		}
 		

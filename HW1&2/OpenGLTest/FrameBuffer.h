@@ -94,7 +94,6 @@ class FrameBuffer {
 	public:
 		/* all the buffers are defined from the lower left corner of the screen */
 		GLubyte *color_buffer;		/* color buffer is unsigned bytes buffer size 3*w*h */
-		GLubyte *depth_buffer;		/* color buffer is unsigned bytes buffer size 3*w*h */
 		/* constructor */
 		GLuint VBO, VAO, EBO;
 		GLuint screenTexture;
@@ -107,9 +106,7 @@ class FrameBuffer {
 
 			/* allocate the buffer */
 			color_buffer = (GLubyte *)malloc(sizeof(GLubyte) * width * height * 4);
-			depth_buffer = (GLubyte *)malloc(sizeof(GLfloat) * width * height);
 
-			ClearDepth();
 
 			glGenTextures(1, &screenTexture);
 			glBindTexture(GL_TEXTURE_2D, screenTexture);
@@ -158,8 +155,6 @@ class FrameBuffer {
 		~FrameBuffer() {
 			if (color_buffer)
 				free(color_buffer);
-			if (depth_buffer)
-				free(depth_buffer);
 		};
 
 		/* get color ptr */
@@ -172,15 +167,11 @@ class FrameBuffer {
 		void dumpToScreen();
 		void DrawPoint(GLfloat x, GLfloat y, Color c);
 		void DrawPixel(GLint x, GLint y, Color c);
-		void DrawDepthPixel(GLint x, GLint y, GLfloat z);
-		bool IsDepthLessThanBuffer(GLint x, GLint y, GLfloat z);
-
 		void DrawPoint(GLfloat x, GLfloat y, Color c, GLint radius);
 		void DrawPointClipSpace(GLfloat x, GLfloat y, Color c, GLint radius);
 		void DrawPointClipSpace(Vec3 point, Color c, GLint radius);
 		void DrawTriangle(Vec3 v1, Vec3 v2, Vec3 v3, Color col);
 		void Fill(GLubyte R, GLubyte G, GLubyte B);
-		void ClearDepth();
 };
 
 

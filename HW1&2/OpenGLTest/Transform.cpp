@@ -122,14 +122,11 @@
 
 
 	 // normalize if w is different than 1 (convert from homogeneous to Cartesian coordinates)
-
 	 if (w != 1) {
 		 out.x /= w;
 		 out.y /= w;
 		 out.z /= w;
-		 cout << w << endl;
 	 }
-	 
  }
 
  void Transform::multPointMatrix2(const Vec3 & in, Vec3 & out, const Matrix44 & M)

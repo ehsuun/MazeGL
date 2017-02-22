@@ -99,20 +99,6 @@ void FrameBuffer::DrawPixel(GLint x, GLint y, Color c) {
 	color_buffer[4 * (y*width + x) + 3] = c.A;
 }
 
-void FrameBuffer::DrawDepthPixel(GLint x, GLint y, GLfloat z)
-{
-	depth_buffer[(y*width + x)] = z;
-}
-
-bool FrameBuffer::IsDepthLessThanBuffer(GLint x, GLint y, GLfloat z)
-{
-	float current = depth_buffer[(y*width + x)];
-	if (depth_buffer[(y*width + x)] > z) {
-		return false;
-	}
-	else return true;
-}
-
 
 void FrameBuffer::DrawPoint(GLfloat x, GLfloat y, Color c, GLint radius) {
 	// move to screen space
@@ -194,11 +180,4 @@ void FrameBuffer::Fill(GLubyte R, GLubyte G, GLubyte B)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	
-}
-
-void FrameBuffer::ClearDepth()
-{
-	for (int i = 0; i < width*height; i++) {
-		depth_buffer[i] = 1.1f;
-	}
 }
