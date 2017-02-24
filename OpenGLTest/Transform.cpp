@@ -127,7 +127,7 @@
 		 out.x /= w;
 		 out.y /= w;
 		 out.z /= w;
-		 cout << w << endl;
+		 
 	 }
 	 
  }

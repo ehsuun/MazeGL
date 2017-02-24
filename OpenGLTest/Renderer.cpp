@@ -139,15 +139,23 @@ void Renderer::RenderTriangle(Vertex p0, Vertex p1, Vertex p2, Texture2D &tex)
 					Vec2 sumUV = ((p0.uv*w0) + (p1.uv*w1) + (p2.uv*w2))*(1/ area);
 					float depth = ((p0.position.z*w0) + (p1.position.z*w1) + (p2.position.z*w2))*(1 / area);
 					//depth = p0.position.z;
+					
+					if (depth > maxd) {
+						maxd = depth;
+						//cout << "max : " << maxd<<endl;
+					}
+					if (depth < mind) {
+						mind = depth;
+						//cout << "min : " <<mind<<endl;
+					}
 					//sumUV = sumUV* (1/iZ);
 
 					int _X = int(sumUV.x*tex.width);
 					int _Y = int(sumUV.y*tex.height);
 
-
-					if (!buffer->IsDepthLessThanBuffer(p.x, p.y, depth)) {
+					if (buffer->IsDepthLessThanBuffer(p.x, p.y, depth)) {
 						buffer->DrawPixel(p.x, p.y, tex.GetPixel(_X, _Y));
-						//buffer->DrawPixel(p.x, p.y, Color(int(*255)));
+						//buffer->DrawPixel(p.x, p.y, Color(int(depth * 255)));
 						buffer->DrawDepthPixel(p.x, p.y, depth);
 					}
 					
@@ -164,7 +172,7 @@ void Renderer::RenderTriangle(Vertex p0, Vertex p1, Vertex p2, Texture2D &tex)
 
 void Renderer::RenderMesh(vector<GLfloat> verts)
 {
-	//verts.size() / 15 is the number of triangles as each vertex has 3 pos and 2 uvs (3+2)*3 = 15
+	//"verts.size() / 15" is the number of triangles as each vertex has 3 pos and 2 uvs (3+2)*3 = 15
 	for (int i = 0; i < (verts.size() / 15); i++) {
 		Vertex point1(
 			Vec3(verts[i * 15],

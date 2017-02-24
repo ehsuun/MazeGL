@@ -13,6 +13,8 @@ class Renderer{
 	Renderer();
 
 public:
+	float maxd;
+	float mind = 1;
 	Matrix44 MVP;
 	int activeTexture = 0;
 	vector<Texture2D> textures;

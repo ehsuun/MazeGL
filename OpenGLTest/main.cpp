@@ -82,10 +82,10 @@ GLfloat testVerts[32] = {
 
 vector<Vertex> testPoly = {
 	Vertex(Vec3(0,0,0),Vec2(0.0,0.5)),
-	Vertex(Vec3(1,0,0),Vec2(0.5,0.5)),
-	Vertex(Vec3(1,1,0),Vec2(0.5,0.5)),
-	Vertex(Vec3(0,1,0),Vec2(0,0)),
-	Vertex(Vec3(-0.5,0.5,0),Vec2(0,0))
+	Vertex(Vec3(0.1,0,0),Vec2(0.5,0.5)),
+	Vertex(Vec3(0.1,0.1,0),Vec2(0.5,0.5)),
+	Vertex(Vec3(0,0.1,0),Vec2(0,0)),
+	Vertex(Vec3(-0.05,0.05,0),Vec2(0,0))
 };
 
 
@@ -297,7 +297,7 @@ int main()
 
 
 	glm::mat4 projection;
-	projection = glm::perspective((float)glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 500.0f);
+	projection = glm::perspective((float)glm::radians(45.0f), (float)window_width / (float)window_height, .1f, 500.0f);
 
 	Camera cam = Camera(45,1,0.1f,500.0f);
 
@@ -354,7 +354,8 @@ int main()
 
 	FrameBuffer buffer = FrameBuffer(window_width, window_height);
 	Renderer renderer = Renderer(buffer);
-	
+	renderer.mind = 1;
+
 	for (int k = 0; k < 20; k++) {
 		renderer.textures.push_back(s.texture2Ds[k]);
 	}
@@ -542,10 +543,11 @@ int main()
 			*/
 			//////////////////////////////////////////////////////////////////
 
-
+			
 			renderer.MVP = (projection*view*model);
 			vector<Vertex> drawVec = testPoly;
 			renderer.RenderPolygon(drawVec, s.texture2Ds[0]);
+			
 
 			for (int i = 0; i < s.numberOfTextures; i++) {
 				renderer.activeTexture = i;

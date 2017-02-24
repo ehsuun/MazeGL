@@ -106,11 +106,7 @@ void FrameBuffer::DrawDepthPixel(GLint x, GLint y, GLfloat z)
 
 bool FrameBuffer::IsDepthLessThanBuffer(GLint x, GLint y, GLfloat z)
 {
-	float current = depth_buffer[(y*width + x)];
-	if (depth_buffer[(y*width + x)] > z) {
-		return false;
-	}
-	else return true;
+	return (z < depth_buffer[(y*width + x)]);
 }
 
 

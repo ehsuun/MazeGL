@@ -94,7 +94,7 @@ class FrameBuffer {
 	public:
 		/* all the buffers are defined from the lower left corner of the screen */
 		GLubyte *color_buffer;		/* color buffer is unsigned bytes buffer size 3*w*h */
-		GLubyte *depth_buffer;		/* color buffer is unsigned bytes buffer size 3*w*h */
+		GLfloat *depth_buffer;		/* color buffer is unsigned bytes buffer size 3*w*h */
 		/* constructor */
 		GLuint VBO, VAO, EBO;
 		GLuint screenTexture;
@@ -107,7 +107,7 @@ class FrameBuffer {
 
 			/* allocate the buffer */
 			color_buffer = (GLubyte *)malloc(sizeof(GLubyte) * width * height * 4);
-			depth_buffer = (GLubyte *)malloc(sizeof(GLfloat) * width * height);
+			depth_buffer = (GLfloat *)malloc(sizeof(GLfloat) * width * height);
 
 			ClearDepth();
 
