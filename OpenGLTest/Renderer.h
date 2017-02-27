@@ -24,6 +24,7 @@ public:
 	}
 		void RenderTriangle(Vec3 v0, Vec3 v1, Vec3 v2, Color col);
 		void RenderTriangle(Vertex p0, Vertex p1, Vertex p2, Texture2D & tex);
+		void RenderTriangle2(Vertex p0, Vertex p1, Vertex p2, Texture2D & tex);
 		void RenderMesh(vector<GLfloat> verts);
 		void RenderPolygon(vector<Vertex> verts, Texture2D &tex);
 		void ClipAndDrawTriangle(Vertex p0, Vertex p1, Vertex p2, Texture2D & tex);

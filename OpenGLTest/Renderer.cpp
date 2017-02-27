@@ -182,6 +182,53 @@ void Renderer::RenderTriangle(Vertex p0, Vertex p1, Vertex p2, Texture2D &tex)
 	}
 }
 
+
+void Renderer::RenderTriangle2(Vertex p0, Vertex p1, Vertex p2, Texture2D &tex)
+{
+		p0.position *= (1.0f / p0.w);
+		p1.position *= (1.0f / p1.w);
+		p2.position *= (1.0f / p2.w);
+
+
+		Point2D v0 = Point2D(p0.position, buffer->width, buffer->height);
+		Point2D v1 = Point2D(p1.position, buffer->width, buffer->height);
+		Point2D v2 = Point2D(p2.position, buffer->width, buffer->height);
+
+
+		// Compute triangle bounding box
+		int minX = min3(v0.x, v1.x, v2.x);
+		int minY = min3(v0.y, v1.y, v2.y);
+		int maxX = max3(v0.x, v1.x, v2.x);
+		int maxY = max3(v0.y, v1.y, v2.y);
+
+		// Clip against screen bounds
+		minX = max(minX, 0);
+		minY = max(minY, 0);
+		maxX = std::min(maxX, buffer->width - 1);
+		maxY = std::min(maxY, buffer->height - 1);
+
+
+		setupEdges(&a0, &b0, &c0, &a1, &b1, &c1, &a2, &b2, &c2);
+
+		/* Optimize this: */
+		Point2D p;
+		for (p.y = minY; p.y <= maxY; p.y++) {
+			for (p.x = minX; p.x <= maxX; p.x++) {
+				float e0 = a0*p.x + b0*p.y + c0;
+				float e1 = a1*p.x + b1*p.y + c1;
+				float e2 = a2*p.x + b2*p.y + c2;
+				if (e0 > 0 && e1 > 0 && e2 > 0) {
+					float depth = p0.position.z;
+					if (buffer->IsDepthLessThanBuffer(p.x, p.y, depth)) {
+						buffer->DrawPixel(p.x, p.y, tex.GetPixel(0,0));
+						buffer->DrawDepthPixel(p.x, p.y, depth);
+					}
+				}
+			}
+		}
+}
+
+
 void Renderer::RenderMesh(vector<GLfloat> verts)
 {
 	//"verts.size() / 15" is the number of triangles as each vertex has 3 pos and 2 uvs (3+2)*3 = 15
