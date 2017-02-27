@@ -293,9 +293,6 @@ int main()
 
 
 
-
-
-
 	glm::mat4 projection;
 	projection = glm::perspective((float)glm::radians(45.0f), (float)window_width / (float)window_height, .1f, 500.0f);
 

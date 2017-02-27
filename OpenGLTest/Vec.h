@@ -18,10 +18,12 @@ struct Vec2
 
 	Vec2();
 	Vec2 operator+(Vec2 rhs);
+	void operator=(Vec2 rhs);
 	Vec2& operator*=(float rhs);
 	Vec2 operator*(float rhs);
 
 	Vec2(GLfloat a, GLfloat b);
+	static Vec2 Lerp(Vec2 &a, Vec2 &b, float t);
 };
 
 struct Vec3
@@ -34,16 +36,19 @@ struct Vec3
 	Vec3(GLfloat a, GLfloat b, GLfloat c);
 	Vec3(glm::vec3 vec);
 
-	Vec3& operator*(float rhs);
+	Vec3 operator*(float rhs);
 	void operator=(Vec3 &rhs);
 
 	//Vec3& operator=(glm::vec3 &rhs);
 
 	Vec3& operator*=(float rhs);
 
-	Vec3& operator+(Vec3 rhs);
+	Vec3 operator+(Vec3 rhs);
 	Vec3& operator+=(Vec3 rhs);
-	Vec3& operator-(Vec3& rhs);
+	Vec3 operator-(Vec3& rhs);
+
+	static Vec3 Lerp(Vec3 &a, Vec3 &b, float t);
+
 
 	static Vec3 reflect(Vec3 vector, Vec3 normal);
 
@@ -75,13 +80,32 @@ struct Vertex {
 	Vec3 position;
 	Vec2 uv;
 
-	Vertex() {
+	float w = 0;
 
+	Vertex() {
+		w = 0;
 	}
 	Vertex(Vec3 &pos, Vec2 &UV) {
 		position = pos;
 		uv = UV;
+		w = 0;
 	}
+	Vertex(Vec3 pos, Vec2 UV) {
+		position = pos;
+		uv = UV;
+		w = 0;
+	}
+
+	Vertex(Vec3 pos, Vec2 UV,float _w) {
+		position = pos;
+		uv = UV;
+		w = _w;
+	}
+
+	void operator=(Vertex &rhs);
+
+	static Vertex Lerp(Vertex &a, Vertex &b, float t);
+	public: float GetPos(int index);
 };
 
 #endif VEC_H

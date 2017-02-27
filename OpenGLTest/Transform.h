@@ -28,6 +28,8 @@ public:
 
 	 static void multPointMatrix(const Vec3 &in, Vec3 &out, const Matrix44 &M);
 
+	 static void multVertexMatrix(const Vertex & in, Vertex & out, const Matrix44 & M);
+
 	 static void multPointMatrix2(const Vec3 & in, Vec3 & out, const Matrix44 & M);
 
 	 static Vec3 Project(Vec3 origin, float fov, float aspect, float nearZ, float farZ, Vec3 camPosition, Vec3 targetPosition);

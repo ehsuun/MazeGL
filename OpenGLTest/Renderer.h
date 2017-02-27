@@ -26,6 +26,9 @@ public:
 		void RenderTriangle(Vertex p0, Vertex p1, Vertex p2, Texture2D & tex);
 		void RenderMesh(vector<GLfloat> verts);
 		void RenderPolygon(vector<Vertex> verts, Texture2D &tex);
+		void ClipAndDrawTriangle(Vertex p0, Vertex p1, Vertex p2, Texture2D & tex);
+		bool ClipPolygonAxis(vector<Vertex>& poly, vector<Vertex>& aux, int componentIndex);
+		void ClipComponent(vector<Vertex> poly, int clipIndex, float factor, vector<Vertex>& result);
 	
 };
 #endif		/* RENDERER_H */

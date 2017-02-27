@@ -132,6 +132,22 @@
 	 
  }
 
+ void Transform::multVertexMatrix(const Vertex & in, Vertex & out, const Matrix44 & M)
+ {
+	 //out = in * Mproj;
+	 out.position.x = in.position.x * M.M[0][0] + in.position.y * M.M[1][0] + in.position.z * M.M[2][0] + /* in.position.z = 1 */ M.M[3][0];
+	 out.position.y = in.position.x * M.M[0][1] + in.position.y * M.M[1][1] + in.position.z * M.M[2][1] + /* in.position.z = 1 */ M.M[3][1];
+	 out.position.z = in.position.x * M.M[0][2] + in.position.y * M.M[1][2] + in.position.z * M.M[2][2] + /* in.position.z = 1 */ M.M[3][2];
+	 float w = in.position.x * M.M[0][3] + in.position.y * M.M[1][3] + in.position.z * M.M[2][3] + /* in.position.z = 1 */ M.M[3][3];
+
+
+
+	 // normalize if w is different than 1 (convert from homogeneous to Cartesian coordinates)
+
+	 out.w = w;
+
+ }
+
  void Transform::multPointMatrix2(const Vec3 & in, Vec3 & out, const Matrix44 & M)
  {
 	 float Point[4][1] = { {in.x},{in.y},{in.z},{1} };

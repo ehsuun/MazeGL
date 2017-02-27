@@ -14,6 +14,12 @@ Vec2 Vec2::operator+(Vec2 rhs)
 	return sum;
 }
 
+void Vec2::operator=(Vec2 rhs)
+{
+	x = rhs.x;
+	y = rhs.y;
+}
+
 Vec2 & Vec2::operator*=(float rhs)
 {
 	Vec2 mult = Vec2();
@@ -38,6 +44,14 @@ Vec2::Vec2(GLfloat a, GLfloat b)
 	y = b;
 }
 
+Vec2 Vec2::Lerp(Vec2 & a, Vec2 & b, float t)
+{
+	return Vec2(
+		a.x + t * (b.x - a.x),
+		a.y + t * (b.y - a.y)
+		);
+}
+
 Vec3::Vec3()
 {
 	x = 0;
@@ -59,7 +73,7 @@ Vec3::Vec3(glm::vec3 vec)
 	z = vec.z;
 }
 
-Vec3& Vec3::operator* (float rhs)
+Vec3 Vec3::operator* (float rhs)
 {
 	Vec3 mult = Vec3();
 	mult.x = x*rhs;
@@ -77,7 +91,7 @@ void Vec3::operator=(Vec3 &rhs)
 
 
 
-Vec3& Vec3::operator+(Vec3 rhs)
+Vec3 Vec3::operator+(Vec3 rhs)
 {
 	Vec3 sum = Vec3();
 	sum.x = x + rhs.x;
@@ -86,13 +100,22 @@ Vec3& Vec3::operator+(Vec3 rhs)
 	return sum;
 }
 
-Vec3& Vec3::operator-(Vec3& rhs)
+Vec3 Vec3::operator-(Vec3& rhs)
 {
 	Vec3 sum = Vec3();
 	sum.x = x - rhs.x;
 	sum.y = y - rhs.y;
 	sum.z = z - rhs.z;
 	return sum;
+}
+
+Vec3 Vec3::Lerp(Vec3 &a, Vec3 &b, float t)
+{
+	return Vec3(
+		a.x + t * (b.x - a.x),
+		a.y + t * (b.y - a.y),
+		a.z + t * (b.z - a.z)
+		);
 }
 
 Vec3 & Vec3::operator+=(Vec3 rhs)
@@ -187,4 +210,29 @@ Vec4& Vec4::operator=(Vec4& rhs)
 	z = rhs.z;
 	w = rhs.w;
 	return *this;
+}
+
+void Vertex::operator=(Vertex & rhs)
+{
+	position = rhs.position;
+	uv = rhs.uv;
+	w = rhs.w;
+}
+
+Vertex Vertex::Lerp(Vertex & a, Vertex & b, float t)
+{
+	float lerpW = a.w + t * (b.w - a.w);
+	return Vertex(Vec3::Lerp(a.position, b.position, t), Vec2::Lerp(a.uv, b.uv, t), lerpW);
+}
+
+float Vertex::GetPos(int index)
+{
+	switch (index) {
+	case 0:
+		return position.x;
+	case 1:
+		return position.y;
+	case 2:
+		return position.z;
+	}
 }
