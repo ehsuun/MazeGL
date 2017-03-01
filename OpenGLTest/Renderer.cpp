@@ -14,6 +14,26 @@ struct Point2D {
 	}
 };
 
+class EdgeEqn {
+public: float a, b, c;
+
+public: EdgeEqn(Vec2 v0, Vec2 v1) {
+	 a = v0.y - v1.y;
+	 b = v1.x - v0.x;
+	 c = -0.5f*(a*(v0.x + v1.x) + b*(v0.y + v1.y));
+	}
+
+public: void flip() {
+		A = -A;
+		B = -B;
+		C = -C;
+	}
+
+public: int evaluate(int x, int y) {
+		return (A*x + B*y + C);
+	}
+};
+
 int orient2d(const Point2D& a, const Point2D& b, const Point2D& c)
 {
 	return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
