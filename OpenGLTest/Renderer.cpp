@@ -210,6 +210,7 @@ void Renderer::RenderTriangle2(Vertex p0, Vertex p1, Vertex p2, Texture2D &tex)
 		p2.position *= (1.0f / p2.w);
 
 
+
 		Point2D v0 = Point2D(p0.position, buffer->width, buffer->height);
 		Point2D v1 = Point2D(p1.position, buffer->width, buffer->height);
 		Point2D v2 = Point2D(p2.position, buffer->width, buffer->height);
@@ -227,25 +228,55 @@ void Renderer::RenderTriangle2(Vertex p0, Vertex p1, Vertex p2, Texture2D &tex)
 		maxX = std::min(maxX, buffer->width - 1);
 		maxY = std::min(maxY, buffer->height - 1);
 
+		//Sort them by Y value
 
-		setupEdges(&a0, &b0, &c0, &a1, &b1, &c1, &a2, &b2, &c2);
+		Vertex up = p0;
+		Vertex mid = p1;
+		Vertex down = p2;
+		if (up.position.y < p1.position.y) {
+			up = p1;
+			mid = p0;
+			down = p2;
+		}
+		if (up.position.y < p2.position.y) {
+			up = p2;
+			mid = p0;
+			down = p1;
+		}
+		if (mid.position.y < down.position.y) {
+			Vertex temp = mid;
+			mid = down;
+			down = temp;
+		}
 
-		/* Optimize this: */
-		Point2D p;
-		for (p.y = minY; p.y <= maxY; p.y++) {
-			for (p.x = minX; p.x <= maxX; p.x++) {
-				float e0 = a0*p.x + b0*p.y + c0;
-				float e1 = a1*p.x + b1*p.y + c1;
-				float e2 = a2*p.x + b2*p.y + c2;
-				if (e0 > 0 && e1 > 0 && e2 > 0) {
-					float depth = p0.position.z;
-					if (buffer->IsDepthLessThanBuffer(p.x, p.y, depth)) {
-						buffer->DrawPixel(p.x, p.y, tex.GetPixel(0,0));
-						buffer->DrawDepthPixel(p.x, p.y, depth);
-					}
+		Point2D v0 = Point2D(up.position, buffer->width, buffer->height);
+		Point2D v1 = Point2D(mid.position, buffer->width, buffer->height);
+		Point2D v2 = Point2D(down.position, buffer->width, buffer->height);
+
+
+
+			// sort vertices in order of descending y
+			// identify scanlines of first half of the triangle
+			// compute screen-space derivatives along edges
+
+			//for each scanline{
+			for(int y = v0.y;y<v1.y;y++){
+				// find span by interpolating vertex coordinates
+				// find start and end values for interpolants
+				// (color, depth, texture coordinates)
+				// rasterize span
+
+				for each pixel in span{
+					// interpolate color, depth, texture coords
+					// perform depth buffering
+					// shade pixel
 				}
 			}
-		}
+
+				// repeat for the second half of the triangle
+		
+
+
 }
 
 
